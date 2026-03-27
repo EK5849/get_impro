@@ -1,0 +1,47 @@
+{
+  "name": "get-impro",
+  "version": "1.0.0",
+  "description": "App de Improvisación Musical Interactiva",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win --x64",
+    "dist:mac-arm": "electron-builder --mac --arm64",
+    "dist:mac-intel": "electron-builder --mac --x64"
+  },
+  "keywords": [
+    "music",
+    "improvisation",
+    "guitar",
+    "piano"
+  ],
+  "author": "get_Impro Team",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^28.2.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.getimpro.app",
+    "productName": "get_Impro",
+    "mac": {
+      "category": "public.app-category.music",
+      "target": ["dmg"]
+    },
+    "win": {
+      "target": {
+        "target": "portable",
+        "arch": ["x64"]
+      }
+    },
+    "files": [
+      "index.html",
+      "main.js",
+      "css/**/*",
+      "js/**/*",
+      "assets/**/*"
+    ]
+  }
+}

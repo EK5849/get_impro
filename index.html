@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>get_Impro — Aprende a Improvisar en Guitarra, Bajo y Piano</title>
+  <meta name="description" content="Aplicación interactiva para aprender improvisación musical en guitarra, bajo y piano. Escalas, acordes, progresiones, metrónomo y sugerencias en tiempo real.">
+  <meta name="keywords" content="improvisación musical, guitarra, bajo, batería, escalas, acordes, metrónomo">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%237B5CF6'/><text y='22' x='6' font-size='18'>🎸</text></svg>">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0a0a0a">
+</head>
+<body>
+
+  <!-- ═══════════════════════════ NAVBAR ══════════════════════════════════ -->
+  <nav class="navbar" role="navigation" aria-label="Navegación principal">
+    <div class="nav-left">
+      <div class="nav-logo">
+        <div class="logo-icon" aria-hidden="true">🎸</div>
+        get_Impro
+      </div>
+      <div class="nav-links" role="menubar">
+        <a href="#section-instrument" role="menuitem">Instrumento</a>
+        <a href="#section-chords"     role="menuitem">Acordes</a>
+        <a href="#section-progressions" role="menuitem">Progresiones</a>
+      </div>
+    </div>
+
+    <!-- Metrónomo Integrado en Navbar -->
+    <div class="nav-metronome">
+      <div class="metro-visual-dot" id="beat-visual-mini"></div>
+      <div class="metro-controls-mini">
+        <input type="number" id="nav-bpm-input" value="120" min="30" max="300" aria-label="BPM">
+        <span class="bpm-label">BPM</span>
+        <button id="nav-tap-tempo" class="btn-mini" title="Marcar Tempo">TAP</button>
+        <button id="nav-mute-toggle" class="btn-mini btn-mute" title="Escuchar/Silenciar Metrónomo">
+          <span class="icon-volume">🔊</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- ═══════════════════════════ MAIN APP ════════════════════════════════ -->
+  <main class="app-container" id="main-content">
+
+    <!-- ── HERO: Selector de tonalidad + escala ─────────────────────────── -->
+    <section class="hero-panel section" aria-labelledby="hero-heading">
+      <div class="hero-inner">
+
+        <!-- Izquierda: Titular + selectors -->
+        <div class="hero-left">
+          <p class="hero-sub" style="font-size: 1.2rem; font-weight: 700; color: var(--white); margin-bottom: 1.5rem;">
+            Ajustes de Escala
+          </p>
+
+          <div class="key-label" id="key-label">Tonalidad</div>
+          <div id="key-selector" role="group" aria-labelledby="key-label"></div>
+
+          <div class="key-label" style="margin-bottom:0.6rem;">Escala</div>
+          <div class="scale-select-wrap">
+            <select id="scale-selector" aria-label="Tipo de escala"></select>
+          </div>
+
+          <div class="scale-notes-label">Notas de la escala</div>
+          <div id="scale-notes-display" aria-live="polite" aria-label="Notas de la escala seleccionada"></div>
+        </div>
+
+        <!-- Derecha: Sugerencias en tiempo real -->
+        <div class="hero-right suggestions-panel">
+          <div class="key-label" style="margin-bottom:1rem;">💡 Sugerencias</div>
+          <div class="suggestions-compact">
+            <div class="suggest-item">
+              <strong>Notas objetivo:</strong>
+              <div id="suggestion-notes-mini" class="notes-mini">Selecciona una escala</div>
+            </div>
+            <div class="suggest-item">
+              <strong>Artistas:</strong>
+              <div id="suggestion-artists-mini">...</div>
+            </div>
+            <div class="suggest-item">
+              <strong>Sensación:</strong>
+              <div id="suggestion-feeling-mini">...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── INSTRUMENTO ────────────────────────────────────────────────────── -->
+    <section class="section" id="section-instrument" aria-labelledby="instrument-heading">
+      <div class="section-header">
+        <h2 class="section-title" id="instrument-heading">🎸 Instrumento</h2>
+        <span style="font-size:0.78rem;color:var(--text-dim);">Haz clic en una nota para escucharla</span>
+      </div>
+
+      <div class="instrument-tabs" role="tablist" aria-label="Selección de instrumento">
+        <button class="instrument-tab active" data-instrument="guitar"
+          role="tab" aria-selected="true" aria-controls="fretboard-container" id="tab-guitar">
+          <span class="tab-emoji">🎸</span> Guitarra
+        </button>
+        <button class="instrument-tab" data-instrument="bass"
+          role="tab" aria-selected="false" aria-controls="fretboard-container" id="tab-bass">
+          <span class="tab-emoji">🎵</span> Bajo
+        </button>
+        <button class="instrument-tab" data-instrument="piano"
+          role="tab" aria-selected="false" aria-controls="piano-container" id="tab-piano">
+          <span class="tab-emoji">🎹</span> Piano
+        </button>
+      </div>
+
+      <div class="section-body" style="padding-top:1rem;">
+        <div class="fretboard-wrapper" id="fretboard-container"
+          role="tabpanel" aria-labelledby="tab-guitar" aria-live="polite"></div>
+        <div id="piano-container" class="hidden"
+          role="tabpanel" aria-labelledby="tab-piano" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- ── ACORDES ────────────────────────────────────────────────────────── -->
+    <section class="section" id="section-chords" aria-labelledby="chords-heading">
+      <div class="section-header">
+        <h2 id="chords-heading">Acordes Diatónicos</h2>
+        <div class="extensions-controls" role="group" aria-label="Extensiones de acordes">
+          <span class="extensions-label">Extensiones:</span>
+          <label class="ext-pill">
+            <input type="checkbox" value="7" class="ext-check"> <span>7ª</span>
+          </label>
+          <label class="ext-pill">
+            <input type="checkbox" value="9" class="ext-check"> <span>9ª</span>
+          </label>
+          <label class="ext-pill">
+            <input type="checkbox" value="11" class="ext-check"> <span>11ª</span>
+          </label>
+          <label class="ext-pill">
+            <input type="checkbox" value="13" class="ext-check"> <span>13ª</span>
+          </label>
+        </div>
+      </div>
+      <div class="section-body">
+        <div id="chords-grid" class="chord-grid" aria-labelledby="chords-heading"></div>
+      </div>
+    </section>
+
+    <!-- ── PROGRESIONES ───────────────────────────────────────────────────── -->
+    <section class="section" id="section-progressions" aria-labelledby="prog-heading">
+      <div class="section-header">
+        <h2 class="section-title" id="prog-heading">🔄 Progresiones</h2>
+      </div>
+      <div class="progressions-controls">
+        <button class="btn-primary" id="btn-loop" aria-label="Reproducir progresión en loop">
+          ▶ Loop
+        </button>
+        <button class="btn-secondary hidden" id="btn-stop-loop" aria-label="Detener loop">
+          ⏹ Parar
+        </button>
+        <button class="btn-secondary" id="btn-clear-custom" aria-label="Limpiar progresión personalizada">
+          🗑 Limpiar Personalizada
+        </button>
+        <span style="font-size:0.78rem;color:var(--text-dim);">
+          Elige una fija o arma tu secuencia de 8 pasos.
+        </span>
+      </div>
+
+      <div class="custom-prog-builder">
+        <div class="section-title" style="margin-bottom:1rem; padding: 0 1.5rem;">Crea tu secuencia (máx 8)</div>
+        <div id="custom-prog-slots" class="custom-slots-grid">
+          <!-- 8 slots will be rendered here -->
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:2rem; padding: 0 1.5rem;">Progresiones Predefinidas</div>
+      <div id="progressions-grid" aria-live="polite" aria-label="Progresiones de acordes disponibles"></div>
+    </section>
+
+
+
+  </main>
+
+  <!-- ═══════════════════════════ FOOTER ══════════════════════════════════ -->
+  <footer class="footer">
+    <p>get_Impro — <span>Improvisación Musical Interactiva</span> · Guitarra · Bajo · Piano</p>
+  </footer>
+
+  <!-- ═══════════════════════════ SCRIPTS ═════════════════════════════════ -->
+  <script type="module">
+    import { init } from './js/app.js';
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('PWA Service Worker registrado', reg))
+          .catch(err => console.error('Error al registrar PWA Service Worker', err));
+      });
+    }
+  </script>
+</body>
+</html>

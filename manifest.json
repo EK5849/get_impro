@@ -1,0 +1,18 @@
+{
+  "short_name": "get_Impro",
+  "name": "get_Impro - Aprende a Improvisar",
+  "description": "Tu herramienta interactiva para improvisación en Guitarra, Bajo y Piano.",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#0a0a0a",
+  "background_color": "#0a0a0a",
+  "orientation": "portrait-primary"
+}

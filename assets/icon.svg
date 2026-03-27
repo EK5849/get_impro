@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7B5CF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5BC0EB;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="#0f172a"/>
+  <!-- Cuerpo estilizado de guitarra/púa -->
+  <path d="M256 80 L400 320 Q420 360 380 400 L132 400 Q92 400 112 360 L256 80 Z" fill="url(#grad1)" opacity="0.8"/>
+  <!-- Teclas de piano -->
+  <rect x="180" y="300" width="30" height="100" fill="white" rx="2"/>
+  <rect x="215" y="300" width="30" height="100" fill="white" rx="2"/>
+  <rect x="250" y="300" width="30" height="100" fill="white" rx="2"/>
+  <rect x="285" y="300" width="30" height="100" fill="white" rx="2"/>
+  <rect x="320" y="300" width="30" height="100" fill="white" rx="2"/>
+  <!-- Teclas negras -->
+  <rect x="205" y="300" width="15" height="50" fill="#000" rx="1"/>
+  <rect x="240" y="300" width="15" height="50" fill="#000" rx="1"/>
+  <rect x="275" y="300" width="15" height="50" fill="#000" rx="1"/>
+  <rect x="310" y="300" width="15" height="50" fill="#000" rx="1"/>
+  <!-- Cuerdas -->
+  <line x1="256" y1="100" x2="256" y2="400" stroke="white" stroke-width="2" opacity="0.5"/>
+  <line x1="240" y1="110" x2="240" y2="400" stroke="white" stroke-width="1" opacity="0.3"/>
+  <line x1="272" y1="110" x2="272" y2="400" stroke="white" stroke-width="1" opacity="0.3"/>
+</svg>
