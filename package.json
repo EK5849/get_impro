@@ -9,7 +9,9 @@
     "dist": "electron-builder",
     "dist:win": "electron-builder --win --x64",
     "dist:mac-arm": "electron-builder --mac --arm64",
-    "dist:mac-intel": "electron-builder --mac --x64"
+    "dist:mac-intel": "electron-builder --mac --x64",
+    "version-up": "node update-version.js",
+    "deploy": "npm run version-up && git add . && git commit -m 'Update PWA' && git push origin main"
   },
   "keywords": [
     "music",

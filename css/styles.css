@@ -688,3 +688,57 @@ input[type=number]:focus { outline: none; border-color: var(--yellow); }
   .nav-links { display: none; }
 }
 
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  PWA UPDATE BANNER                                                         */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.update-banner {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1rem 1.5rem;
+  background: rgba(30, 30, 38, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--purple);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6), var(--glow-purple);
+  animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 320px;
+}
+
+.update-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.update-icon {
+  font-size: 1.5rem;
+}
+
+.update-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.update-text strong {
+  color: var(--white);
+  font-size: 0.95rem;
+}
+
+.update-text span {
+  color: var(--text-dim);
+  font-size: 0.82rem;
+}
+
+.btn-update {
+  white-space: nowrap;
+  padding: 8px 16px;
+  font-size: 0.8rem;
+}
+

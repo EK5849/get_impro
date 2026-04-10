@@ -435,6 +435,43 @@ function initTapTempo() {
   });
 }
 
+function initServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').then(reg => {
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              // Nueva versión detectada y lista para activarse
+              showUpdateBanner(newWorker);
+            }
+          });
+        });
+      });
+    });
+
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!refreshing) {
+        window.location.reload();
+        refreshing = true;
+      }
+    });
+  }
+}
+
+function showUpdateBanner(worker) {
+  const banner = document.getElementById('update-banner');
+  const refreshBtn = document.getElementById('update-refresh-btn');
+  if (!banner || !refreshBtn) return;
+
+  banner.classList.remove('hidden');
+  refreshBtn.addEventListener('click', () => {
+    worker.postMessage({ type: 'SKIP_WAITING' });
+  });
+}
+
 // ─── Inicialización ────────────────────────────────────────────────────────────
 export function init() {
   initKeySelector();
@@ -444,6 +481,7 @@ export function init() {
   initProgressionControls();
   initNavLinks();
   initTapTempo();
+  initServiceWorker();
   renderBPMDisplay();
   
   // Extensiones de acordes (7, 9, 11, 13)

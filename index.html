@@ -188,14 +188,18 @@
     import { init } from './js/app.js';
     document.addEventListener('DOMContentLoaded', init);
   </script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('PWA Service Worker registrado', reg))
-          .catch(err => console.error('Error al registrar PWA Service Worker', err));
-      });
-    }
-  </script>
+
+  <!-- Banner de Actualización PWA -->
+  <div id="update-banner" class="update-banner hidden" role="alert">
+    <div class="update-content">
+      <span class="update-icon">🚀</span>
+      <div class="update-text">
+        <strong>¡Nueva versión disponible!</strong>
+        <span>Actualiza para ver los últimos cambios.</span>
+      </div>
+    </div>
+    <button id="update-refresh-btn" class="btn-primary btn-update">Refrescar Ahora</button>
+  </div>
+
 </body>
 </html>

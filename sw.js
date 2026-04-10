@@ -1,4 +1,4 @@
-const CACHE_NAME = 'get-impro-v1';
+const CACHE_NAME = 'get-impro-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -31,6 +31,13 @@ self.addEventListener('activate', (event) => {
       );
     })
   );
+});
+
+// Mensaje para forzar la activación inmediata
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
 
 // Estrategia Cache First (con fallback a red)
