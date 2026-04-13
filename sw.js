@@ -1,4 +1,4 @@
-const CACHE_NAME = 'get-impro-v2';
+const CACHE_NAME = 'get-impro-v20';
 const ASSETS = [
   './',
   './index.html',
