@@ -1,4 +1,4 @@
-const CACHE_NAME = 'get-impro-v20';
+const CACHE_NAME = 'get-impro-v21';
 const ASSETS = [
   './',
   './index.html',
@@ -9,6 +9,7 @@ const ASSETS = [
   './js/musicLogic.js',
   './js/fretboard.js',
   './js/piano.js',
+  './js/caged.js',
   './assets/icon.svg'
 ];
 

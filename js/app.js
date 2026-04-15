@@ -7,6 +7,7 @@ import { KEYS, SCALES, PROGRESSIONS, getScaleNotes, getDiatonicChords, resolvePr
 import { playChord, metronome, setLoopChords, processLoopBeat, resetLoopIndex } from './audioEngine.js';
 import { renderFretboard } from './fretboard.js';
 import { renderPiano } from './piano.js';
+import { renderCagedShapes } from './caged.js';
 
 // ─── Estado Global ─────────────────────────────────────────────────────────────
 const state = {
@@ -25,6 +26,8 @@ const state = {
   activeChordIndex: -1,
   chordExtensions: [],
   isMuted: false,
+  cagedRoot: 'C',
+  cagedQuality: 'maj',
 };
 
 // ─── Funciones de actualización de UI ─────────────────────────────────────────
@@ -56,6 +59,19 @@ function renderInstrument() {
     pianoContainer?.classList.remove('hidden');
     renderPiano('piano-container', state.scaleNotes);
   }
+  renderCagedSection();
+}
+
+function renderCagedSection() {
+  const container = document.getElementById('section-caged');
+  if (!container) return;
+
+  if (state.instrument === 'guitar') {
+    container.classList.remove('hidden');
+    renderCagedShapes('caged-container', state.cagedRoot, state.cagedQuality);
+  } else {
+    container.classList.add('hidden');
+  }
 }
 
 function renderChordsSection() {
@@ -85,8 +101,11 @@ function renderChordsSection() {
       const idx = parseInt(btn.dataset.idx, 10);
       const chord = state.diatonicChords[idx];
       if (chord) {
+        state.cagedRoot = chord.notes[0];
+        state.cagedQuality = chord.quality;
         playChord(chord.notes);
         highlightActiveChord(idx);
+        renderCagedSection();
       }
     });
   });
@@ -233,6 +252,9 @@ function refreshAll() {
   updateScaleNotes();
   renderScaleNotesDisplay();
   renderInstrument();
+  state.cagedRoot = state.key;
+  state.cagedQuality = state.scale.includes('Minor') ? 'min' : 'maj';
+  renderCagedSection();
   renderChordsSection();
   renderProgressionsSection();
   renderSuggestionsSection();
