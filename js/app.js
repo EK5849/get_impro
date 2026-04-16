@@ -3,7 +3,7 @@
  * Coordinador central: estado global, binding de eventos, orquestación de módulos.
  */
 
-import { KEYS, SCALES, PROGRESSIONS, getScaleNotes, getDiatonicChords, resolveProgression, getSuggestions } from './musicLogic.js';
+import { KEYS, SCALES, PROGRESSIONS, getScaleNotes, getDiatonicChords, getChordNotes, resolveProgression, getSuggestions } from './musicLogic.js';
 import { playChord, metronome, setLoopChords, processLoopBeat, resetLoopIndex } from './audioEngine.js';
 import { renderFretboard } from './fretboard.js';
 import { renderPiano } from './piano.js';
