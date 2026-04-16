@@ -173,15 +173,23 @@
         <button class="btn-secondary" id="btn-clear-custom" aria-label="Limpiar progresión personalizada">
           🗑 Limpiar Personalizada
         </button>
-        <span style="font-size:0.78rem;color:var(--text-dim);">
-          Elige una fija o arma tu secuencia de 8 pasos.
-        </span>
-      </div>
-
       <div class="custom-prog-builder">
-        <div class="section-title" style="margin-bottom:1rem; padding: 0 1.5rem;">Crea tu secuencia (máx 8)</div>
+        <div class="sequencer-controls" style="padding: 0 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+          <div class="editor-tool-group">
+            <span class="control-label" style="display:block; margin-bottom: 5px;">Duración de nota:</span>
+            <div class="duration-btns">
+              <button class="duration-btn active" data-dur="1" title="Negra (1 tiempo)">♩</button>
+              <button class="duration-btn" data-dur="2" title="Blanca (2 tiempos)">½</button>
+              <button class="duration-btn" data-dur="4" title="Redonda (4 tiempos)">◯</button>
+            </div>
+          </div>
+          <div class="editor-info" style="font-size: 0.75rem; color: var(--text-dim); max-width: 300px;">
+            Selecciona un acorde de arriba y "pinta" en la rejilla. Haz clic en un paso lleno para borrarlo.
+          </div>
+        </div>
+
         <div id="custom-prog-slots" class="custom-slots-grid">
-          <!-- 8 slots will be rendered here -->
+          <!-- 32 steps will be rendered here -->
         </div>
       </div>
 

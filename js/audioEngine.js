@@ -226,28 +226,48 @@ export function setLoopChords(chords) {
 
 /**
  * Procesa un beat del metrónomo para tocar el acorde correspondiente.
- * @param {number} beatInBar - Tiempo actual en el compás (0, 1, 2, 3...)
- * @param {number} bpm       - BPM actual para calcular duración
- * @param {Function} onChordChange - Callback(index)
+ * @param {number} currentBeat - Pulso absoluto del metrónomo
+ * @param {number} bpm         - BPM actual para calcular duración
+ * @param {Function} onChordChange - Callback(chord, index)
  */
-export function processLoopBeat(beatInBar, bpm, onChordChange) {
+export function processLoopBeat(currentBeat, bpm, onChordChange) {
   if (!loopChords.length) return;
 
-  // Solo tocamos al inicio del compás (beat 0)
-  if (beatInBar === 0) {
-    const chord = loopChords[loopIndex];
-    if (chord && chord.notes) {
-      const secondsPerBeat = 60 / bpm;
-      // Duración: casi todo el compás (usamos metronome.timeSignature como referencia externa o asumimos 4)
-      // Para simplificar, asumimos que el acorde dura hasta el próximo compás
-      playChord(chord.notes, secondsPerBeat * 3.8); 
+  const idx = currentBeat % loopChords.length;
+  const chord = loopChords[idx];
+  
+  // Detección de cambio: ¿tenemos un acorde nuevo en este pulso?
+  // Miramos el acorde del pulso anterior
+  const prevIdx = (idx - 1 + loopChords.length) % loopChords.length;
+  const prevChord = loopChords[prevIdx];
+
+  const secondsPerBeat = 60 / bpm;
+
+  // Disparamos sonido si:
+  // 1. Hay un acorde en este paso Y
+  // 2. (Es el inicio absoluto del loop OR es un acorde diferente al del paso anterior)
+  const isNewChord = chord && (!prevChord || chord.name !== prevChord.name);
+  const isStartOfLoop = idx === 0 && chord;
+
+  if (isNewChord || isStartOfLoop) {
+    if (chord.notes) {
+      // Calculamos cuánto dura este bloque de acordes idénticos hacia adelante
+      let durationSteps = 1;
+      let checkIdx = (idx + 1) % loopChords.length;
+      while (checkIdx !== idx && loopChords[checkIdx]?.name === chord.name) {
+        durationSteps++;
+        checkIdx = (checkIdx + 1) % loopChords.length;
+        if (durationSteps >= loopChords.length) break;
+      }
+      
+      // La duración es el número de pasos contiguos * segundos por beat
+      // Multiplicamos por 0.95 para dejar un pequeño hueco al final
+      playChord(chord.notes, secondsPerBeat * durationSteps * 0.95);
     }
-    
-    if (typeof onChordChange === 'function') {
-      onChordChange(chord, loopIndex);
-    }
-    
-    loopIndex = (loopIndex + 1) % loopChords.length;
+  }
+
+  if (typeof onChordChange === 'function') {
+    onChordChange(chord, idx);
   }
 }
 

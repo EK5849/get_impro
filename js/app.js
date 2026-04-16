@@ -19,7 +19,8 @@ const state = {
   isMetronomeOn: false,
   isLoopOn: false,
   selectedProgression: null,
-  customProgression: [], // Array de hasta 8 acordes
+  customProgression: new Array(32).fill(null),
+  editorDuration: 1, // 1=Negra, 2=Blanca, 4=Redonda
   diatonicChords: [],
   scaleNotes: [],
   swing: 0,
@@ -126,15 +127,56 @@ function renderChordsSection() {
       e.stopPropagation();
       const idx = parseInt(btn.dataset.idx, 10);
       const chord = state.diatonicChords[idx];
-      if (chord && state.customProgression.length < 8) {
-        state.customProgression.push({ ...chord });
-        renderCustomProgression();
-        if (state.isLoopOn && !state.selectedProgression) {
-          triggerLoopRestart();
+      if (chord) {
+        // En lugar de pushear, "seleccionamos" este acorde para pintar
+        state.activeChordIndex = idx;
+        highlightActiveChord(idx);
+        
+        // Pero también lo añadimos al primer slot vacío para dar feedback
+        const firstEmpty = state.customProgression.findIndex(c => c === null);
+        if (firstEmpty !== -1) {
+          toggleChordAt(firstEmpty);
         }
       }
     });
   });
+}
+
+function toggleChordAt(idx) {
+  const activeChord = state.diatonicChords[state.activeChordIndex];
+  if (!activeChord) return;
+
+  const duration = parseInt(state.editorDuration, 10);
+  // Machacamos el rango
+  for (let i = 0; i < duration; i++) {
+    if (idx + i < 32) {
+      state.customProgression[idx + i] = { ...activeChord };
+    }
+  }
+  renderCustomProgression();
+  if (state.isLoopOn && !state.selectedProgression) {
+    triggerLoopRestart();
+  }
+}
+
+function removeChordAt(idx) {
+  const current = state.customProgression[idx];
+  if (!current) return;
+
+  // Borrar el bloque contiguo con el mismo nombre
+  const targetName = current.name;
+  let start = idx;
+  while (start > 0 && state.customProgression[start - 1]?.name === targetName) start--;
+  let end = idx;
+  while (end < 31 && state.customProgression[end + 1]?.name === targetName) end++;
+
+  for (let i = start; i <= end; i++) {
+    state.customProgression[i] = null;
+  }
+  renderCustomProgression();
+  if (state.isLoopOn && !state.selectedProgression) {
+    triggerLoopRestart();
+  }
 }
 
 function renderCustomProgression() {
@@ -142,30 +184,41 @@ function renderCustomProgression() {
   if (!container) return;
 
   let html = '';
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 32; i++) {
     const chord = state.customProgression[i];
-    if (chord) {
-      html += `
-        <div class="custom-slot filled" data-idx="${i}">
-          <div class="slot-roman">${chord.romanNumeral}</div>
-          <div class="slot-name">${chord.name}</div>
-          <div class="slot-remove" data-idx="${i}">×</div>
-        </div>`;
-    } else {
-      html += `<div class="custom-slot" data-idx="${i}"></div>`;
-    }
+    const prev = i > 0 ? state.customProgression[i - 1] : null;
+    const next = i < 31 ? state.customProgression[i + 1] : null;
+
+    // Fusión si son el mismo acorde contiguo
+    const isMergedLeft = chord && prev && chord.name === prev.name;
+    const isMergedRight = chord && next && chord.name === next.name;
+
+    let classes = 'custom-slot';
+    if (chord) classes += ' filled';
+    if (isMergedLeft) classes += ' merged-left';
+    if (isMergedRight) classes += ' merged-right';
+
+    html += `
+      <div class="${classes}" data-idx="${i}">
+        <div class="slot-roman">${chord && !isMergedLeft ? chord.romanNumeral : ''}</div>
+        <div class="slot-name">${chord && !isMergedLeft ? chord.name : ''}</div>
+        ${chord && !isMergedRight ? `<div class="slot-remove" data-idx="${i}">×</div>` : ''}
+      </div>`;
   }
   container.innerHTML = html;
+
+  container.querySelectorAll('.custom-slot').forEach(slot => {
+    slot.addEventListener('click', () => {
+      const idx = parseInt(slot.dataset.idx, 10);
+      toggleChordAt(idx);
+    });
+  });
 
   container.querySelectorAll('.slot-remove').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
       const idx = parseInt(btn.dataset.idx, 10);
-      state.customProgression.splice(idx, 1);
-      renderCustomProgression();
-      if (state.isLoopOn && !state.selectedProgression) {
-        triggerLoopRestart();
-      }
+      removeChordAt(idx);
     });
   });
 }
@@ -284,7 +337,8 @@ function triggerLoopRestart() {
   
   if (state.selectedProgression) {
     chordsToLoop = resolveProgression(state.diatonicChords, state.selectedProgression.degrees);
-  } else if (state.customProgression.length > 0) {
+  } else {
+    // Para el modo manual, pasamos los 32 pasos
     chordsToLoop = state.customProgression;
   }
 
@@ -377,7 +431,7 @@ function initMetronome() {
     }
 
     if (state.isLoopOn) {
-      processLoopBeat(beatInBar, state.bpm, (chord, idx) => {
+      processLoopBeat(beatNum, state.bpm, (chord, idx) => {
         highlightActiveChord(chord, idx);
       });
     }
@@ -425,13 +479,24 @@ function initProgressionControls() {
 
   if (btnClear) {
     btnClear.addEventListener('click', () => {
-      state.customProgression = [];
+      state.customProgression = new Array(32).fill(null);
       renderCustomProgression();
       if (state.isLoopOn && !state.selectedProgression) {
         triggerLoopRestart();
       }
     });
   }
+}
+
+function initDurationButtons() {
+  const btns = document.querySelectorAll('.duration-btn');
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.editorDuration = parseInt(btn.dataset.dur, 10);
+    });
+  });
 }
 
 function initNavLinks() {
@@ -520,14 +585,7 @@ export function init() {
   initServiceWorker();
   renderBPMDisplay();
   
-  // Extensiones de acordes (7, 9, 11, 13)
-  document.querySelectorAll('.ext-check').forEach(cb => {
-    cb.addEventListener('change', () => {
-      state.chordExtensions = Array.from(document.querySelectorAll('.ext-check:checked')).map(c => c.value);
-      refreshAll();
-    });
-  });
-
+  initDurationButtons();
   refreshAll();
 
   // Welcome animation
