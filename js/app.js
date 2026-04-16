@@ -63,14 +63,25 @@ function renderInstrument() {
 }
 
 function renderCagedSection() {
-  const container = document.getElementById('section-caged');
-  if (!container) return;
+  const container = document.getElementById('caged-container');
+  const wrapper   = document.getElementById('section-caged'); // Actualizado al ID de la sección
+  const heading   = document.getElementById('caged-heading');
+  
+  if (!container || !wrapper) return;
 
   if (state.instrument === 'guitar') {
-    container.classList.remove('hidden');
-    renderCagedShapes('caged-container', state.cagedRoot, state.cagedQuality);
+    wrapper.classList.remove('hidden');
+    
+    // Actualizar el título con el nombre del acorde actual
+    if (heading) {
+      const qualityDisplay = state.cagedQuality === 'maj' ? '' : (state.cagedQuality === 'min' ? 'm' : state.cagedQuality);
+      heading.textContent = `🎸 Formas del Acorde ${state.cagedRoot}${qualityDisplay} (CAGED)`;
+    }
+
+    const chordNotes = getChordNotes(state.cagedRoot, state.cagedQuality, state.chordExtensions);
+    renderCagedShapes('caged-container', state.cagedRoot, chordNotes);
   } else {
-    container.classList.add('hidden');
+    wrapper.classList.add('hidden');
   }
 }
 
@@ -253,7 +264,10 @@ function refreshAll() {
   renderScaleNotesDisplay();
   renderInstrument();
   state.cagedRoot = state.key;
-  state.cagedQuality = state.scale.includes('Minor') ? 'min' : 'maj';
+  // Determinar calidad básica de la tónica
+  const tonicChord = state.diatonicChords[0];
+  state.cagedQuality = tonicChord ? tonicChord.quality : (state.scale.includes('Minor') ? 'min' : 'maj');
+  
   renderCagedSection();
   renderChordsSection();
   renderProgressionsSection();

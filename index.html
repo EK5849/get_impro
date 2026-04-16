@@ -23,6 +23,7 @@
       <div class="nav-links" role="menubar">
         <a href="#section-instrument" role="menuitem">Instrumento</a>
         <a href="#section-chords"     role="menuitem">Acordes</a>
+        <a href="#section-caged"      role="menuitem">Formas</a>
         <a href="#section-progressions" role="menuitem">Progresiones</a>
       </div>
     </div>
@@ -118,16 +119,7 @@
       </div>
     </section>
 
-    <!-- ── CAGED SHAPES ──────────────────────────────────────────────────── -->
-    <section class="section hidden" id="section-caged" aria-labelledby="caged-heading">
-      <div class="section-header">
-        <h2 id="caged-heading">Formas del Acorde (CAGED)</h2>
-        <span style="font-size:0.78rem;color:var(--text-dim);">5 posiciones para tocar el acorde en guitarra</span>
-      </div>
-      <div class="section-body">
-        <div id="caged-container"></div>
-      </div>
-    </section>
+
 
     <!-- ── ACORDES ────────────────────────────────────────────────────────── -->
     <section class="section" id="section-chords" aria-labelledby="chords-heading">
@@ -151,6 +143,18 @@
       </div>
       <div class="section-body">
         <div id="chords-grid" class="chord-grid" aria-labelledby="chords-heading"></div>
+      </div>
+    </section>
+
+    <!-- ── FORMAS DE ACORDE (CAGED) ────────────────────────────────────────── -->
+    <section class="section" id="section-caged" aria-labelledby="caged-heading">
+      <div id="caged-unified-wrapper" class="caged-unified-wrapper">
+        <div class="section-header" style="border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
+          <h2 id="caged-heading" style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 700; color: var(--white);">
+            🎸 Formas del Acorde (CAGED)
+          </h2>
+        </div>
+        <div id="caged-container" style="padding-top: 1.5rem;"></div>
       </div>
     </section>
 
@@ -191,7 +195,7 @@
 
   <!-- ═══════════════════════════ FOOTER ══════════════════════════════════ -->
   <footer class="footer">
-    <p>get_Impro v21 — <span>Improvisación Musical Interactiva</span> · Guitarra · Bajo · Piano</p>
+    <p>get_Impro v22 — <span>Improvisación Musical Interactiva</span> · Guitarra · Bajo · Piano</p>
   </footer>
 
   <!-- ═══════════════════════════ SCRIPTS ═════════════════════════════════ -->

@@ -26,7 +26,11 @@
   --green:        #A8C97F;
   --green-dim:    #A8C97F22;
   --cyan:         #5BC0EB;
+  --cyan-dim:     #5BC0EB22;
   --orange:       #FF9F43;
+  --orange-dim:   #FF9F4322;
+  --pink:         #EB5BEE;
+  --pink-dim:     #EB5BEE22;
 
   --white:        #F5F5F5;
   --text:         #E0E0E8;
@@ -706,6 +710,14 @@ input[type=number]:focus { outline: none; border-color: var(--yellow); }
   border-radius: 8px;
   padding: 10px;
   border: 1px solid var(--border);
+}
+
+.caged-unified-wrapper {
+  transition: all 0.3s ease;
+}
+
+.caged-unified-wrapper.hidden {
+  display: none;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════ */
