@@ -147,10 +147,13 @@ function toggleChordAt(idx) {
   if (!activeChord) return;
 
   const duration = parseInt(state.editorDuration, 10);
-  // Machacamos el rango
+  // Creamos UNA SOLA instancia para este bloque. 
+  // Esto permite diferenciar entre un acorde largo y 4 negras del mismo acorde.
+  const newChordInstance = { ...activeChord };
+
   for (let i = 0; i < duration; i++) {
     if (idx + i < 32) {
-      state.customProgression[idx + i] = { ...activeChord };
+      state.customProgression[idx + i] = newChordInstance;
     }
   }
   renderCustomProgression();
@@ -163,12 +166,11 @@ function removeChordAt(idx) {
   const current = state.customProgression[idx];
   if (!current) return;
 
-  // Borrar el bloque contiguo con el mismo nombre
-  const targetName = current.name;
+  // Borrar el bloque contiguo por IDENTIDAD de objeto
   let start = idx;
-  while (start > 0 && state.customProgression[start - 1]?.name === targetName) start--;
+  while (start > 0 && state.customProgression[start - 1] === current) start--;
   let end = idx;
-  while (end < 31 && state.customProgression[end + 1]?.name === targetName) end++;
+  while (end < 31 && state.customProgression[end + 1] === current) end++;
 
   for (let i = start; i <= end; i++) {
     state.customProgression[i] = null;
@@ -189,9 +191,9 @@ function renderCustomProgression() {
     const prev = i > 0 ? state.customProgression[i - 1] : null;
     const next = i < 31 ? state.customProgression[i + 1] : null;
 
-    // Fusión si son el mismo acorde contiguo
-    const isMergedLeft = chord && prev && chord.name === prev.name;
-    const isMergedRight = chord && next && chord.name === next.name;
+    // Fusión visual solo si es el MISMO OBJETO exacto
+    const isMergedLeft = chord && prev && chord === prev;
+    const isMergedRight = chord && next && chord === next;
 
     let classes = 'custom-slot';
     if (chord) classes += ' filled';

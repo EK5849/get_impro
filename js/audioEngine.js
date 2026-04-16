@@ -245,23 +245,22 @@ export function processLoopBeat(currentBeat, bpm, onChordChange) {
 
   // Disparamos sonido si:
   // 1. Hay un acorde en este paso Y
-  // 2. (Es el inicio absoluto del loop OR es un acorde diferente al del paso anterior)
-  const isNewChord = chord && (!prevChord || chord.name !== prevChord.name);
+  // 2. (Es el inicio absoluto del loop OR es un objeto diferente al del paso anterior)
+  const isNewChord = chord && (!prevChord || chord !== prevChord);
   const isStartOfLoop = idx === 0 && chord;
 
   if (isNewChord || isStartOfLoop) {
     if (chord.notes) {
-      // Calculamos cuánto dura este bloque de acordes idénticos hacia adelante
+      // Calculamos cuánto dura este bloque por IDENTIDAD de objeto
       let durationSteps = 1;
       let checkIdx = (idx + 1) % loopChords.length;
-      while (checkIdx !== idx && loopChords[checkIdx]?.name === chord.name) {
+      while (checkIdx !== idx && loopChords[checkIdx] === chord) {
         durationSteps++;
         checkIdx = (checkIdx + 1) % loopChords.length;
         if (durationSteps >= loopChords.length) break;
       }
       
       // La duración es el número de pasos contiguos * segundos por beat
-      // Multiplicamos por 0.95 para dejar un pequeño hueco al final
       playChord(chord.notes, secondsPerBeat * durationSteps * 0.95);
     }
   }
