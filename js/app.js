@@ -133,20 +133,22 @@ function renderChordsSection() {
         highlightActiveChord(idx);
         
         // Pero también lo añadimos al primer slot vacío para dar feedback
+        // IMPORTANTE: Al pulsar el botón '+', siempre se añade como NEGRA (duración 1)
+        // para permitir repeticiones rápidas. El modo "pincel" se reserva para la rejilla.
         const firstEmpty = state.customProgression.findIndex(c => c === null);
         if (firstEmpty !== -1) {
-          toggleChordAt(firstEmpty);
+          toggleChordAt(firstEmpty, 1);
         }
       }
     });
   });
 }
 
-function toggleChordAt(idx) {
+function toggleChordAt(idx, forcedDuration = null) {
   const activeChord = state.diatonicChords[state.activeChordIndex];
   if (!activeChord) return;
 
-  const duration = parseInt(state.editorDuration, 10);
+  const duration = forcedDuration || parseInt(state.editorDuration, 10);
   // Creamos UNA SOLA instancia para este bloque. 
   // Esto permite diferenciar entre un acorde largo y 4 negras del mismo acorde.
   const newChordInstance = { ...activeChord };
