@@ -578,6 +578,36 @@ function initServiceWorker() {
   }
 }
 
+function initForceRefresh() {
+  const forceRefreshBtn = document.getElementById('nav-force-refresh');
+  if (!forceRefreshBtn) return;
+  
+  forceRefreshBtn.addEventListener('click', () => {
+    // Show some visual feedback
+    const originalText = forceRefreshBtn.textContent;
+    forceRefreshBtn.textContent = 'Actualizando...';
+    
+    if ('caches' in window) {
+      caches.keys().then(names => {
+        return Promise.all(names.map(name => caches.delete(name)));
+      }).then(() => {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(registrations => {
+            for (let registration of registrations) {
+              registration.unregister();
+            }
+            window.location.reload(true);
+          }).catch(() => window.location.reload(true));
+        } else {
+          window.location.reload(true);
+        }
+      }).catch(() => window.location.reload(true));
+    } else {
+      window.location.reload(true);
+    }
+  });
+}
+
 function showUpdateBanner(worker) {
   const banner = document.getElementById('update-banner');
   const refreshBtn = document.getElementById('update-refresh-btn');
@@ -599,6 +629,7 @@ export function init() {
   initProgressionControls();
   initNavLinks();
   initTapTempo();
+  initForceRefresh();
   initServiceWorker();
   renderBPMDisplay();
   

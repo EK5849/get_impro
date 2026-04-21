@@ -35,6 +35,7 @@
         <input type="number" id="nav-bpm-input" value="120" min="30" max="300" aria-label="BPM">
         <span class="bpm-label">BPM</span>
         <button id="nav-tap-tempo" class="btn-mini" title="Marcar Tempo">TAP</button>
+        <button id="nav-force-refresh" class="btn-mini" title="Forzar Actualización / Limpiar Caché" style="margin-left: 8px;">↻ Refrescar</button>
         <button id="nav-mute-toggle" class="btn-mini btn-mute" title="Escuchar/Silenciar Metrónomo">
           <span class="icon-volume">🔊</span>
         </button>
@@ -158,43 +159,49 @@
       </div>
     </section>
 
-    <!-- ── PROGRESIONES ───────────────────────────────────────────────────── -->
     <section class="section" id="section-progressions" aria-labelledby="prog-heading">
       <div class="section-header">
         <h2 class="section-title" id="prog-heading">🔄 Progresiones</h2>
       </div>
-      <div class="progressions-controls">
-        <button class="btn-primary" id="btn-loop" aria-label="Reproducir progresión en loop">
-          ▶ Loop
-        </button>
-        <button class="btn-secondary hidden" id="btn-stop-loop" aria-label="Detener loop">
-          ⏹ Parar
-        </button>
-        <button class="btn-secondary" id="btn-clear-custom" aria-label="Limpiar progresión personalizada">
-          🗑 Limpiar Personalizada
-        </button>
-      <div class="custom-prog-builder">
-        <div class="sequencer-controls" style="padding: 0 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
-          <div class="editor-tool-group">
-            <span class="control-label" style="display:block; margin-bottom: 5px;">Duración de nota:</span>
-            <div class="duration-btns">
-              <button class="duration-btn active" data-dur="1" title="Negra (1 tiempo)">♩</button>
-              <button class="duration-btn" data-dur="2" title="Blanca (2 tiempos)">½</button>
-              <button class="duration-btn" data-dur="4" title="Redonda (4 tiempos)">◯</button>
-            </div>
-          </div>
-          <div class="editor-info" style="font-size: 0.75rem; color: var(--text-dim); max-width: 300px;">
-            Selecciona un acorde de arriba y "pinta" en la rejilla. Haz clic en un paso lleno para borrarlo.
-          </div>
+
+      <div class="section-body progressions-body" style="display: flex; flex-wrap: wrap; gap: 2rem; padding: 1.5rem;">
+        <!-- Controles de Loop (Left Column) -->
+        <div class="progressions-controls-left" style="flex: 0 0 220px; display: flex; flex-direction: column; gap: 1rem;">
+          <button class="btn-primary" id="btn-loop" aria-label="Reproducir progresión en loop">
+            ▶ Loop
+          </button>
+          <button class="btn-secondary hidden" id="btn-stop-loop" aria-label="Detener loop">
+            ⏹ Parar
+          </button>
+          <button class="btn-secondary" id="btn-clear-custom" aria-label="Limpiar progresión personalizada">
+            🗑 Limpiar Personalizada
+          </button>
         </div>
 
-        <div id="custom-prog-slots" class="custom-slots-grid">
-          <!-- 32 steps will be rendered here -->
+        <!-- Secuenciador (Right Column) -->
+        <div class="custom-prog-builder" style="flex: 1; min-width: 300px; margin-top: 0;">
+          <div class="sequencer-controls" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+            <div class="editor-tool-group">
+              <span class="control-label" style="display:block; margin-bottom: 5px;">Duración de nota:</span>
+              <div class="duration-btns">
+                <button class="duration-btn active" data-dur="1" title="Negra (1 tiempo)">♩</button>
+                <button class="duration-btn" data-dur="2" title="Blanca (2 tiempos)">½</button>
+                <button class="duration-btn" data-dur="4" title="Redonda (4 tiempos)">◯</button>
+              </div>
+            </div>
+            <div class="editor-info" style="font-size: 0.75rem; color: var(--text-dim); max-width: 300px;">
+              Selecciona un acorde de arriba y "pinta" en la rejilla. Haz clic en un paso lleno para borrarlo.
+            </div>
+          </div>
+
+          <div id="custom-prog-slots" class="custom-slots-grid" style="padding: 0;">
+            <!-- 32 steps will be rendered here -->
+          </div>
         </div>
       </div>
 
-      <details class="progressions-collapse" style="margin-top: 2rem;">
-        <summary class="section-title" style="padding: 0 1.5rem; cursor: pointer; user-select: none; display: flex; align-items: center; gap: 8px;">
+      <details class="progressions-collapse" style="border-top: 1px solid var(--border);">
+        <summary class="section-title" style="padding: 1.5rem; cursor: pointer; user-select: none; display: flex; align-items: center; gap: 8px;">
           <span class="collapse-icon">▶</span> Progresiones Predefinidas
         </summary>
         <div id="progressions-grid" aria-live="polite" aria-label="Progresiones de acordes disponibles"></div>
