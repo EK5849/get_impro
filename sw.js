@@ -1,4 +1,4 @@
-const CACHE_NAME = 'get-impro-v27';
+const CACHE_NAME = 'get-impro-v28';
 const ASSETS = [
   './',
   './index.html',
@@ -41,11 +41,24 @@ self.addEventListener('message', (event) => {
   }
 });
 
-// Estrategia Cache First (con fallback a red)
+// Estrategia Stale-While-Revalidate (Actualiza en segundo plano)
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
+    caches.match(event.request).then((cachedResponse) => {
+      const fetchPromise = fetch(event.request).then((networkResponse) => {
+        // Si la petición es válida, actualizamos la caché silenciosamente
+        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, networkResponse.clone());
+          });
+        }
+        return networkResponse;
+      }).catch(() => {
+        // Fallback silencioso en caso de no tener red
+      });
+
+      // Retorna la caché inmediatamente si existe, si no, espera a la red
+      return cachedResponse || fetchPromise;
     })
   );
 });
