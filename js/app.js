@@ -351,6 +351,18 @@ function triggerLoopRestart() {
 
 // ─── Event Listeners ──────────────────────────────────────────────────────────
 
+function initExtensions() {
+  const checks = document.querySelectorAll('.ext-check');
+  checks.forEach(chk => {
+    chk.addEventListener('change', () => {
+      state.chordExtensions = Array.from(checks)
+        .filter(c => c.checked)
+        .map(c => c.value);
+      refreshAll();
+    });
+  });
+}
+
 function initKeySelector() {
   const container = document.getElementById('key-selector');
   if (!container) return;
@@ -581,6 +593,7 @@ function showUpdateBanner(worker) {
 export function init() {
   initKeySelector();
   initScaleSelector();
+  initExtensions();
   initInstrumentTabs();
   initMetronome();
   initProgressionControls();

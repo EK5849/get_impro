@@ -417,30 +417,31 @@ img, svg { display: block; }
 
 .custom-slots-grid {
   display: grid; 
-  grid-template-columns: repeat(16, 1fr); 
-  gap: 4px; 
+  grid-template-columns: repeat(8, 1fr); 
+  gap: 6px; 
   padding: 0 1.5rem 1.5rem;
 }
 
 .custom-slot {
-  aspect-ratio: 1/1.1; 
+  aspect-ratio: 1/1.2; 
   background: var(--bg-3); 
   border: 1px solid var(--border);
-  border-radius: 4px; 
+  border-radius: 6px; 
   display: flex; flex-direction: column;
   align-items: center; justify-content: center; 
   position: relative;
   transition: all 0.1s ease; 
   cursor: pointer;
+  min-height: 80px;
 }
 
 .custom-slot:hover { border-color: var(--text-faint); background: var(--surface); }
 
 /* Agrupación por compases (Cada 4 pasos) */
 .custom-slot:nth-child(4n) {
-  margin-right: 8px; /* Espacio entre compases */
+  margin-right: 12px; /* Espacio entre compases */
 }
-.custom-slot:nth-child(16n) {
+.custom-slot:nth-child(8n) {
   margin-right: 0;
 }
 
@@ -469,8 +470,8 @@ img, svg { display: block; }
   z-index: 2;
 }
 
-.slot-roman { font-size: 0.5rem; font-weight: 700; color: var(--text-dim); }
-.slot-name { font-family: var(--ff-display); font-size: 0.75rem; font-weight: 800; color: var(--white); }
+.slot-roman { font-size: 0.65rem; font-weight: 700; color: var(--text-dim); }
+.slot-name { font-family: var(--ff-display); font-size: 0.95rem; font-weight: 800; color: var(--white); }
 
 .slot-remove {
   position: absolute; top: -4px; right: -4px; width: 14px; height: 14px;
@@ -577,6 +578,24 @@ img, svg { display: block; }
   text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;
 }
 .prog-chords { font-size: 0.78rem; color: var(--text-dim); }
+
+/* ─── Collapsible Progressions ───────────────────────────────────────────── */
+details.progressions-collapse summary::marker {
+  display: none;
+  content: "";
+}
+details.progressions-collapse summary::-webkit-details-marker {
+  display: none;
+}
+details.progressions-collapse .collapse-icon {
+  display: inline-block;
+  transition: transform var(--transition);
+  font-size: 0.8rem;
+  color: var(--purple);
+}
+details.progressions-collapse[open] .collapse-icon {
+  transform: rotate(90deg);
+}
 
 /* ══════════════════════════════════════════════════════════════════════════ */
 /*  METRÓNOMO                                                                 */
